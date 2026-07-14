@@ -1,17 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
+  // 1. LAZY INITIALIZER: This function runs immediately before the screen paints.
+  // It guarantees the timer starts at the exact saved time with no "flashing" or resetting.
+  const [timeLeft, setTimeLeft] = useState(() => {
+    let savedTargetDate = localStorage.getItem("myLaunchDate");
+
+    if (!savedTargetDate) {
+      savedTargetDate = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
+      localStorage.setItem("myLaunchDate", savedTargetDate.toString());
+    } else {
+      savedTargetDate = parseInt(savedTargetDate, 10);
+    }
+
+    const distance = savedTargetDate - new Date().getTime();
+
+    if (distance > 0) {
+      return {
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      };
+    }
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  });
+
+  // 2. The interval simply keeps updating the clock every second based on that saved date.
+  useEffect(() => {
+    const savedTargetDate = parseInt(localStorage.getItem("myLaunchDate"), 10);
+
+    const timer = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = savedTargetDate - now;
+
+      if (distance > 0) {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      } else {
+        clearInterval(timer);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
     if (!email.trim()) return;
-
     setSubmitted(true);
   };
+
+  const formatTime = (num) => (num < 10 ? `0${num}` : num);
 
   return (
     <main className="launch-page">
@@ -30,6 +79,28 @@ function App() {
             <br />
             Get ready for a better way to connect.
           </p>
+
+          <div className="countdown-container">
+            <div className="time-block">
+              <span className="time-num">{formatTime(timeLeft.days)}</span>
+              <span className="time-txt">Days</span>
+            </div>
+            <span className="time-sep">:</span>
+            <div className="time-block">
+              <span className="time-num">{formatTime(timeLeft.hours)}</span>
+              <span className="time-txt">Hrs</span>
+            </div>
+            <span className="time-sep">:</span>
+            <div className="time-block">
+              <span className="time-num">{formatTime(timeLeft.minutes)}</span>
+              <span className="time-txt">Min</span>
+            </div>
+            <span className="time-sep">:</span>
+            <div className="time-block">
+              <span className="time-num">{formatTime(timeLeft.seconds)}</span>
+              <span className="time-txt">Sec</span>
+            </div>
+          </div>
 
           <p className="signup-text">
             Sign up to be the first to know when we launch.
