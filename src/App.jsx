@@ -1,53 +1,69 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+
+// Set the actual launch date here.
+// Format: YYYY-MM-DDTHH:MM:SS+05:30
+const LAUNCH_DATE = new Date("2026-08-14T00:00:00+05:30").getTime();
+
+const calculateTimeLeft = () => {
+  const distance = LAUNCH_DATE - Date.now();
+
+  if (distance <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    };
+  }
+
+  return {
+    days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+
+    hours: Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) /
+        (1000 * 60 * 60)
+    ),
+
+    minutes: Math.floor(
+      (distance % (1000 * 60 * 60)) /
+        (1000 * 60)
+    ),
+
+    seconds: Math.floor(
+      (distance % (1000 * 60)) / 1000
+    ),
+  };
+};
 
 function App() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  // 1. LAZY INITIALIZER: This function runs immediately before the screen paints.
-  // It guarantees the timer starts at the exact saved time with no "flashing" or resetting.
-  const [timeLeft, setTimeLeft] = useState(() => {
-    let savedTargetDate = localStorage.getItem("myLaunchDate");
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
-    if (!savedTargetDate) {
-      savedTargetDate = new Date().getTime() + 30 * 24 * 60 * 60 * 1000;
-      localStorage.setItem("myLaunchDate", savedTargetDate.toString());
-    } else {
-      savedTargetDate = parseInt(savedTargetDate, 10);
-    }
-
-    const distance = savedTargetDate - new Date().getTime();
-
-    if (distance > 0) {
-      return {
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      };
-    }
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  });
-
-  // 2. The interval simply keeps updating the clock every second based on that saved date.
   useEffect(() => {
-    const savedTargetDate = parseInt(localStorage.getItem("myLaunchDate"), 10);
+    const updateCountdown = () => {
+      const updatedTime = calculateTimeLeft();
+
+      setTimeLeft(updatedTime);
+
+      const countdownFinished =
+        updatedTime.days === 0 &&
+        updatedTime.hours === 0 &&
+        updatedTime.minutes === 0 &&
+        updatedTime.seconds === 0;
+
+      return countdownFinished;
+    };
+
+    updateCountdown();
 
     const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = savedTargetDate - now;
+      const finished = updateCountdown();
 
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
-      } else {
+      if (finished) {
         clearInterval(timer);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
     }, 1000);
 
@@ -56,57 +72,100 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     if (!email.trim()) return;
+
     setSubmitted(true);
   };
 
-  const formatTime = (num) => (num < 10 ? `0${num}` : num);
+  const formatTime = (number) =>
+    String(number).padStart(2, "0");
 
   return (
     <main className="launch-page">
-      <div className="texture-layer" aria-hidden="true" />
+      <div
+        className="texture-layer"
+        aria-hidden="true"
+      />
 
       <div className="page-content">
         <section className="content-section">
           <h1 className="main-title">
             <span className="title-lead">We’re</span>
-            <span className="title-bold">Launching</span>
-            <span className="title-bold">Soon..</span>
+
+            <span className="title-bold">
+              Launching
+            </span>
+
+            <span className="title-bold">
+              Soon..
+            </span>
           </h1>
 
           <p className="description">
-            We&apos;re working hard to bring you something amazing.
+            We&apos;re working hard to bring you
+            something amazing.
             <br />
             Get ready for a better way to connect.
           </p>
 
           <div className="countdown-container">
             <div className="time-block">
-              <span className="time-num">{formatTime(timeLeft.days)}</span>
-              <span className="time-txt">Days</span>
+              <span className="time-num">
+                {formatTime(timeLeft.days)}
+              </span>
+
+              <span className="time-txt">
+                Days
+              </span>
             </div>
+
             <span className="time-sep">:</span>
+
             <div className="time-block">
-              <span className="time-num">{formatTime(timeLeft.hours)}</span>
-              <span className="time-txt">Hrs</span>
+              <span className="time-num">
+                {formatTime(timeLeft.hours)}
+              </span>
+
+              <span className="time-txt">
+                Hrs
+              </span>
             </div>
+
             <span className="time-sep">:</span>
+
             <div className="time-block">
-              <span className="time-num">{formatTime(timeLeft.minutes)}</span>
-              <span className="time-txt">Min</span>
+              <span className="time-num">
+                {formatTime(timeLeft.minutes)}
+              </span>
+
+              <span className="time-txt">
+                Min
+              </span>
             </div>
+
             <span className="time-sep">:</span>
+
             <div className="time-block">
-              <span className="time-num">{formatTime(timeLeft.seconds)}</span>
-              <span className="time-txt">Sec</span>
+              <span className="time-num">
+                {formatTime(timeLeft.seconds)}
+              </span>
+
+              <span className="time-txt">
+                Sec
+              </span>
             </div>
           </div>
 
           <p className="signup-text">
-            Sign up to be the first to know when we launch.
+            Sign up to be the first to know when we
+            launch.
           </p>
 
-          <form className="notify-form" onSubmit={handleSubmit}>
+          <form
+            className="notify-form"
+            onSubmit={handleSubmit}
+          >
             <label className="email-field">
               <svg
                 className="mail-icon"
@@ -143,13 +202,17 @@ function App() {
               />
             </label>
 
-            <button type="submit" className="notify-button">
+            <button
+              type="submit"
+              className="notify-button"
+            >
               Notify Me
             </button>
 
             {submitted && (
               <p className="success-message">
-                Thank you! We&apos;ll notify you when we launch.
+                Thank you! We&apos;ll notify you when
+                we launch.
               </p>
             )}
           </form>
