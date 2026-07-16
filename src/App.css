@@ -23,9 +23,7 @@ input {
   font: inherit;
 }
 
-/* ==============================
-   Main page
-================================ */
+
 
 .launch-page {
   --page-background: #eef4fd;
@@ -45,9 +43,7 @@ input {
   border-bottom: 4px solid #282231;
 }
 
-/* ==============================
-   Background texture
-================================ */
+
 
 .texture-layer {
   position: absolute;
@@ -64,9 +60,7 @@ input {
   mix-blend-mode: normal;
 }
 
-/* ==============================
-   Desktop layout
-================================ */
+
 
 .page-content {
   width: min(1280px, calc(100% - 48px));
@@ -84,9 +78,7 @@ input {
   padding: 65px 0;
 }
 
-/* ==============================
-   Left content
-================================ */
+
 
 .content-section {
   width: 100%;
@@ -101,9 +93,7 @@ input {
   text-align: left;
 }
 
-/* ==============================
-   Main heading
-================================ */
+
 
 .main-title {
   margin: 0;
@@ -130,9 +120,7 @@ input {
   line-height: 0.95;
 }
 
-/* ==============================
-   Text
-================================ */
+
 
 .description {
   margin: 20px 0 0;
@@ -154,9 +142,7 @@ input {
   line-height: 1.4;
 }
 
-/* ==============================
-   Form
-================================ */
+
 
 .notify-form {
   width: 100%;
@@ -229,9 +215,7 @@ input {
   opacity: 1;
 }
 
-/* ==============================
-   Button
-================================ */
+
 
 .notify-button {
   min-width: 150px;
@@ -290,9 +274,7 @@ input {
   font-weight: 600;
 }
 
-/* ==============================
-   Right illustration
-================================ */
+
 
 .illustration-section {
   width: 100%;
@@ -322,9 +304,7 @@ input {
   filter: drop-shadow(0 20px 25px rgba(43, 74, 135, 0.09));
 }
 
-/* ==============================
-   Smaller desktop
-================================ */
+
 
 @media (max-width: 1100px) and (min-width: 901px) {
   .page-content {
@@ -350,9 +330,7 @@ input {
   }
 }
 
-/* ==============================
-   Tablet portrait
-================================ */
+
 
 @media (min-width: 601px) and (max-width: 900px) {
   html,
@@ -498,9 +476,8 @@ input {
   }
 }
 
-/* ==============================
-   Tablet landscape
-================================ */
+
+
 
 @media (min-width: 601px) and (max-width: 900px) and (max-height: 700px) {
   .page-content {
@@ -593,9 +570,8 @@ input {
   }
 }
 
-/* ==============================
-   Mobile
-================================ */
+
+
 
 @media (max-width: 600px) {
   html,
@@ -764,9 +740,6 @@ input {
   }
 }
 
-/* ==============================
-   Short-height phones
-================================ */
 
 @media (max-width: 600px) and (max-height: 720px) {
   .page-content {
@@ -828,9 +801,7 @@ input {
   }
 }
 
-/* ==============================
-   Very short phones
-================================ */
+
 
 @media (max-width: 600px) and (max-height: 620px) {
   .page-content {
@@ -876,9 +847,7 @@ input {
   }
 }
 
-/* ==============================
-   Narrow mobile
-================================ */
+
 
 @media (max-width: 380px) {
   .page-content {
@@ -899,9 +868,7 @@ input {
   }
 }
 
-/* ==============================
-   Countdown Timer Styles
-================================ */
+
 
 .countdown-container {
   display: flex;
@@ -910,7 +877,6 @@ input {
   margin: 25px 0 10px;
   padding: 15px 25px;
   
-  /* Matches the form input style */
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(30, 57, 104, 0.1);
   border-radius: 10px;
@@ -951,9 +917,7 @@ input {
   user-select: none;
 }
 
-/* ==============================
-   Countdown Responsiveness
-================================ */
+
 
 @media (min-width: 601px) and (max-width: 900px) {
   .countdown-container {
