@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-// Set the actual launch date here.
-// Format: YYYY-MM-DDTHH:MM:SS+05:30
+
 const LAUNCH_DATE = new Date("2026-08-14T00:00:00+05:30").getTime();
 
 const calculateTimeLeft = () => {
